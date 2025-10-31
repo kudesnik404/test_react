@@ -6,21 +6,25 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@ant-design/icons": "^5.6.1",
+    "@api/kinopoiskdev": "file:.api/apis/kinopoiskdev",
     "@reduxjs/toolkit": "^2.9.2",
+    "antd": "^5.27.6",
     "next": "16.0.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "sass": "^1.93.2"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
+    "eslint": "^9.38.0",
     "eslint-config-next": "16.0.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
