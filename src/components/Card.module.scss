@@ -11,10 +11,15 @@
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
+    display: flex;
 
     &:hover {
       transform: translateY(-4px);
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    :global(.ant-card-body) {
+      flex: 1;
     }
   }
 
@@ -31,20 +36,28 @@
   }
 
   &__info{
-    padding: 12px;
-    height: 100%;
+    height: calc(100% - 412px);
+    margin-top: 12px;
     display: flex;
     flex-direction: column;
+    gap: 8px;
     justify-content: space-between;
 
-    h3 {
-      margin: 0 0 4px 0;
+    &__title {
+      margin-bottom: 0 !important;
+      line-height: 1.15 !important;
     }
 
     p {
-      margin: 0;
       color: #666;
-      font-size: 14px;
     }
+  }
+
+  &__close {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    padding: 10px;
+    cursor: pointer;
   }
 }

@@ -1,47 +1,84 @@
-import { notFound } from "next/navigation";
-import type { Metadata } from "next";
-
-type Movie = {
-  id: string;
-  name: string;
-  description?: string;
-  year?: string;
-  poster?: string;
-};
-
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  // можно сделать fetch для title, но для простоты возвращаем статическое
-  return { title: `Product ${params.id}` };
-}
-
-export default async function ProductPage({ params }: { params: { id: string } }) {
-  const { id } = params;
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/movies`, {
-    cache: "no-store",
-  }).catch(() => null);
-
-  if (!res || !res.ok) {
-    // при проблеме с API можно показать сообщение или 500
-    return <main style={{ padding: 24 }}>Ошибка загрузки данных.</main>;
-  }
-
-  const movies: Movie[] = await res.json();
-  const movie = movies.find((m) => String(m.id) === String(id));
-
-  if (!movie) {
-    // возвращает 404-страницу Next
-    notFound();
-  }
-
-  return (
-    <main style={{ padding: 24 }}>
-      <h1>
-        {movie.name} {movie.year ? `(${movie.year})` : null}
-      </h1>
-      {movie.poster && (
-        <img src={movie.poster} alt={movie.name} style={{ width: 320, borderRadius: 8 }} />
-      )}
-      <p style={{ marginTop: 12 }}>{movie.description}</p>
-    </main>
-  );
-}
+// "use client";
+//
+// import { useEffect, useState } from "react";
+// import { useParams } from "next/navigation";
+// import { useDispatch, useSelector } from "react-redux";
+// import { RootState, AppDispatch } from "@/store";
+// import { toggleLike } from "@/store/slices/moviesSlice";
+// import { Card, Typography, Spin } from "antd";
+// import { FrownOutlined } from "@ant-design/icons";
+// import LikeCheckbox from "@/components/LikeCheckbox";
+// import styles from "./page.module.scss";
+//
+// const { Title, Paragraph } = Typography;
+//
+// export default function MoviePage() {
+//   const { id } = useParams();
+//   const dispatch = useDispatch<AppDispatch>();
+//
+//   const [movie, setMovie] = useState<any>(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState<string | null>(null);
+//
+//   const likedMovies = useSelector((state: RootState) => state.movies.movies.filter((m) => m.liked));
+//
+//   useEffect(() => {
+//     async function fetchMovie() {
+//       try {
+//         const res = await fetch(`/api/movie/${id}`);
+//         if (!res.ok) throw new Error("Ошибка при получении фильма");
+//         const data = await res.json();
+//         setMovie(data);
+//       } catch (err: any) {
+//         setError(err.message);
+//       } finally {
+//         setLoading(false);
+//       }
+//     }
+//
+//     fetchMovie();
+//   }, [id]);
+//
+//   const handleLike = (checked: boolean) => {
+//     if (!movie) return;
+//     dispatch(toggleLike(movie.id));
+//   };
+//
+//   if (loading)
+//     return (
+//       <div className={styles.loader}>
+//         <Spin size="large" />
+//       </div>
+//     );
+//
+//   if (error)
+//     return (
+//       <div className={styles.error}>
+//         <p>Ошибка: {error}</p>
+//       </div>
+//     );
+//
+//   if (!movie)
+//     return (
+//       <div className={styles.notFound}>
+//         <p>Фильм не найден</p>
+//       </div>
+//     );
+//
+//   const isLiked = likedMovies.some((m) => m.id === movie.id);
+//
+//   return (
+//     <main className={styles.movie}>
+//       <div className={styles.movie__info}>
+//         <Title level={2}>{movie.name || movie.alternativeName}</Title>
+//         <Paragraph>{movie.description || "Описание отсутствует."}</Paragraph>
+//         <p>
+//           <strong>Год:</strong> {movie.year || "—"}
+//         </p>
+//         <p>
+//           <strong>Возрастной рейтинг:</strong> {movie.ageRating || "—"}
+//         </p>
+//       </div>
+//     </main>
+//   );
+// }

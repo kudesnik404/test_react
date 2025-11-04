@@ -3,19 +3,20 @@ import kinopoiskdev from "@api/kinopoiskdev";
 
 kinopoiskdev.auth("8HXMSYJ-27JMATK-MWFEVA9-W7DT94T");
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const url = new URL(request.url);
+    const page = url.searchParams.get("page") ?? "1";
+
     const response = await kinopoiskdev.movieController_findManyByQueryV1_4({
-      page: "1",
-      limit: "24",
+      page,
+      limit: "16",
       type: "cartoon",
       isSeries: "false",
       ageRating: "18",
     });
 
     const moviesData = response.data?.docs || [];
-
-    console.log("Все поля фильмов:", moviesData);
 
     const movies = moviesData.map((item: any) => ({
       id: item.id,
@@ -31,7 +32,10 @@ export async function GET() {
 
     return NextResponse.json(movies);
   } catch (err: any) {
-    console.error("Error fetching movies from Kinopoisk:", err);
-    return NextResponse.json({ error: err.message || "Failed to fetch movies" }, { status: 500 });
+    console.error("Ошибка получения списка фильмов:", err);
+    return NextResponse.json(
+      { error: err?.message || "Не получилось запросить фильмы" },
+      { status: 500 }
+    );
   }
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../styles/globals.scss";
+import "../styles/reset.scss";
 import ReduxProviderWrapper from "@/components/ReduxProviderWrapper";
 import "antd/dist/reset.css";
 

@@ -1,8 +1,8 @@
 "use client";
 
-import { HeartOutlined, HeartFilled } from "@ant-design/icons";
-import { Checkbox } from "antd";
+import { HeartTwoTone, HeartFilled } from "@ant-design/icons";
 import React from "react";
+import styles from "./LikeCheckbox.module.scss";
 
 interface LikeCheckboxProps {
   checked: boolean;
@@ -15,17 +15,15 @@ export default function LikeCheckbox({ checked, onChange }: LikeCheckboxProps) {
   };
 
   return (
-    <Checkbox
-      checked={checked}
-      onChange={(e) => onChange(e.target.checked)}
-      onClick={handleClick}
-      style={{ display: "inline-flex" }}
-    >
-      {checked ? (
-        <HeartFilled style={{ color: "#EB2F45", fontSize: 20 }} />
-      ) : (
-        <HeartOutlined style={{ color: "#EB2F45", fontSize: 20 }} />
-      )}
-    </Checkbox>
+    <label className={styles.checkbox} onClick={handleClick}>
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      <span className={styles.icon}>
+        {checked ? (
+          <HeartFilled style={{ color: "#EB2F45", fontSize: 40 }} />
+        ) : (
+          <HeartTwoTone twoToneColor="#EB2F45" style={{ fontSize: 40 }} />
+        )}
+      </span>
+    </label>
   );
 }

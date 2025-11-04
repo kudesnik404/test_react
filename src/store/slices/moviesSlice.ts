@@ -1,11 +1,20 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Movie } from "../types";
 
-export const fetchMovies = createAsyncThunk<Movie[]>("movies/fetchMovies", async () => {
-  const res = await fetch("/api/movies");
-  const data = await res.json();
-  return data;
-});
+type FetchArgs = { page?: number };
+
+export const fetchMovies = createAsyncThunk<Movie[], FetchArgs>(
+  "movies/fetchMovies",
+  async ({ page = 1 }: FetchArgs) => {
+    const res = await fetch(`/api/movies?page=${page}`);
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(`Ошибка запроса фильмов: ${res.status} ${res.statusText} ${text}`);
+    }
+    const data = await res.json();
+    return data as Movie[];
+  }
+);
 
 interface MoviesState {
   movies: Movie[];
@@ -15,7 +24,7 @@ interface MoviesState {
 
 const initialState: MoviesState = {
   movies: [],
-  loading: true,
+  loading: false,
   error: null,
 };
 
@@ -31,8 +40,9 @@ const moviesSlice = createSlice({
     builder
       .addCase(fetchMovies.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
-      .addCase(fetchMovies.fulfilled, (state, action) => {
+      .addCase(fetchMovies.fulfilled, (state, action: PayloadAction<Movie[]>) => {
         state.loading = false;
         state.movies = action.payload;
       })
