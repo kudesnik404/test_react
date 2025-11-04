@@ -15,10 +15,12 @@ export default function ProductsPage() {
   const dispatch = useDispatch<AppDispatch>();
   const { movies, loading, error } = useSelector((state: RootState) => state.movies);
   const [page, setPage] = useState<number>(1);
+  const [genre, setGenre] = useState<string>("all");
+  const [likeFilter, setLikeFilter] = useState<string>("all");
 
   useEffect(() => {
-    dispatch(fetchMovies({ page }));
-  }, [dispatch, page]);
+    dispatch(fetchMovies({ page, genre, likeFilter }));
+  }, [dispatch, page, genre, likeFilter]);
 
   useEffect(() => {
     if (movies.length > 0) {
@@ -33,7 +35,7 @@ export default function ProductsPage() {
     <main className={pageStyles.products}>
       <Title className={pageStyles.products__title}>Список фильмов</Title>
 
-      <Space wrap style={{ width: "100%", justifyContent: "right" }}>
+      <Space wrap style={{ width: "100%" }}>
         {disabledFilters.map((item, index) => (
           <Select
             key={`фильтр-${index}`}
@@ -51,35 +53,38 @@ export default function ProductsPage() {
 
         <Select
           key="фильтр-лайки"
-          defaultValue="all"
+          value={likeFilter}
           size="large"
           options={[
-            {
-              value: "all",
-              label: <span>Все</span>,
-            },
-            {
-              value: "liked",
-              label: <span>Избранное</span>,
-            },
+            { value: "all", label: "Все" },
+            { value: "liked", label: "Избранное" },
           ]}
           style={{ width: 126 }}
+          onChange={(value) => {
+            setLikeFilter(value);
+            setPage(1);
+          }}
         />
 
         <Select
           key="фильтр-жанр"
-          defaultValue="all"
+          value={genre}
           size="large"
           options={[
-            {
-              value: "all",
-              label: <span>Любой жанр</span>,
-            },
-            {
-              value: "comedy",
-              label: <span>Комедия</span>,
-            },
+            { value: "all", label: "Любой жанр" },
+            { value: "комедия", label: "Комедия" },
+            { value: "мелодрама", label: "Мелодрама" },
+            { value: "драма", label: "Драма" },
+            { value: "ужасы", label: "Ужасы" },
+            { value: "фэнтези", label: "Фэнтези" },
+            { value: "фантастика", label: "Фантастика" },
+            { value: "боевик", label: "Боевик" },
           ]}
+          style={{ width: 137 }}
+          onChange={(value) => {
+            setGenre(value);
+            setPage(1);
+          }}
         />
       </Space>
 

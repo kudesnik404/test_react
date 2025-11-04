@@ -1,16 +1,23 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Movie } from "../types";
 
-type FetchArgs = { page?: number };
+type FetchArgs = { page?: number; genre?: string };
 
 export const fetchMovies = createAsyncThunk<Movie[], FetchArgs>(
   "movies/fetchMovies",
-  async ({ page = 1 }: FetchArgs) => {
-    const res = await fetch(`/api/movies?page=${page}`);
+  async ({ page = 1, genre }: FetchArgs) => {
+    const params = new URLSearchParams();
+    params.set("page", page.toString());
+    if (genre && genre !== "all") {
+      params.set("genres.name", genre);
+    }
+
+    const res = await fetch(`/api/movies?${params.toString()}`);
     if (!res.ok) {
       const text = await res.text().catch(() => "");
       throw new Error(`Ошибка запроса фильмов: ${res.status} ${res.statusText} ${text}`);
     }
+
     const data = await res.json();
     return data as Movie[];
   }

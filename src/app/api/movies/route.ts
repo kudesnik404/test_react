@@ -7,17 +7,28 @@ export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
     const page = url.searchParams.get("page") ?? "1";
+    const genre = url.searchParams.get("genres.name");
 
-    const response = await kinopoiskdev.movieController_findManyByQueryV1_4({
+    console.log("Incoming GET params:", { page, genre });
+
+    const params: Record<string, any> = {
       page,
       limit: "16",
       type: "cartoon",
-      isSeries: "false",
+      isSeries: false,
       ageRating: "18",
-    });
+    };
+
+    if (genre && genre !== "all") {
+      params["genres.name"] = genre;
+    }
+
+    console.log("Params for SDK:", params);
+
+    const response = await kinopoiskdev.movieController_findManyByQueryV1_4(params);
+    console.log("SDK response:", response);
 
     const moviesData = response.data?.docs || [];
-
     const movies = moviesData.map((item: any) => ({
       id: item.id,
       name: item.name || item.alternativeName || item.enName || "",

@@ -9,7 +9,7 @@ import { addLikedMovie, removeLikedMovie } from "@/store/slices/likedMoviesSlice
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch } from "@/store";
 import styles from "./Card.module.scss";
-import { FrownOutlined, CloseOutlined } from "@ant-design/icons";
+import { FrownOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
@@ -56,13 +56,6 @@ export default function MovieCard({ movie }: MovieCardProps) {
           <Text>{movie.year ? `Год: ${movie.year}` : "Год неизвестен"}</Text>
         </div>
         <LikeCheckbox checked={isLiked} onChange={handleLikeChange} />
-        <Button
-          type="primary"
-          shape="circle"
-          icon={<CloseOutlined />}
-          size="large"
-          className={styles.card__close}
-        />
       </Card>
     </Link>
   );
