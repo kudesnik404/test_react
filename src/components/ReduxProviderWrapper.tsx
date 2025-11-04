@@ -34,6 +34,9 @@ export default function ReduxProviderWrapper({ children }: { children: React.Rea
           token: {
             colorPrimary: "#141414",
             borderRadius: 4,
+            colorLink: "#F06D8A",
+            colorLinkActive: "#CC2D4F",
+            colorLinkHover: "#E599A9",
           },
           components: {
             Pagination: {

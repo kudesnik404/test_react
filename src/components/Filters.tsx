@@ -38,7 +38,7 @@ const Filters: React.FC<FiltersProps> = ({
           { value: "all", label: <span>Все</span> },
           { value: "liked", label: <span>Избранное</span> },
         ]}
-        style={{ width: 126 }}
+        style={{ width: 128 }}
         onChange={onLikeFilterChange}
       />
 
@@ -54,7 +54,7 @@ const Filters: React.FC<FiltersProps> = ({
           { value: "ужасы", label: <span>Ужасы</span> },
           { value: "фэнтези", label: <span>Фэнтези</span> },
         ]}
-        style={{ width: 137 }}
+        style={{ width: 140 }}
         onChange={onGenreChange}
       />
     </Space>
