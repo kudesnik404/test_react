@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/store";
 import { fetchMovies } from "@/store/slices/moviesSlice";
 import MovieCard from "@/components/Card";
+import Filters from "@/components/Filters";
 import { Row, Col, Skeleton, Typography, Pagination, Space, Select } from "antd";
 import pageStyles from "./page.module.scss";
 import cardStyles from "@/components/Card.module.scss";
@@ -13,14 +14,15 @@ const { Title } = Typography;
 
 export default function ProductsPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const { movies, loading, error } = useSelector((state: RootState) => state.movies);
+  const { movies, total, loading, error } = useSelector((state: RootState) => state.movies);
   const [page, setPage] = useState<number>(1);
   const [genre, setGenre] = useState<string>("all");
   const [likeFilter, setLikeFilter] = useState<string>("all");
+  const moviesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     dispatch(fetchMovies({ page, genre, likeFilter }));
-  }, [dispatch, page, genre, likeFilter]);
+  }, [page, genre, likeFilter, dispatch]);
 
   useEffect(() => {
     if (movies.length > 0) {
@@ -28,65 +30,26 @@ export default function ProductsPage() {
     }
   }, [movies]);
 
+  useEffect(() => {
+    if (!loading && moviesRef.current) {
+      requestAnimationFrame(() => {
+        moviesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }, [movies, loading]);
+
   const skeletonArray = Array.from({ length: 8 });
-  const disabledFilters = ["Мультфильмы", "Полнометражные", "18+"];
 
   return (
-    <main className={pageStyles.products}>
+    <main className={pageStyles.products} ref={moviesRef}>
       <Title className={pageStyles.products__title}>Список фильмов</Title>
 
-      <Space wrap style={{ width: "100%" }}>
-        {disabledFilters.map((item, index) => (
-          <Select
-            key={`фильтр-${index}`}
-            defaultValue={index + 1}
-            disabled
-            size="large"
-            options={[
-              {
-                value: index + 1,
-                label: <span>{item}</span>,
-              },
-            ]}
-          />
-        ))}
-
-        <Select
-          key="фильтр-лайки"
-          value={likeFilter}
-          size="large"
-          options={[
-            { value: "all", label: "Все" },
-            { value: "liked", label: "Избранное" },
-          ]}
-          style={{ width: 126 }}
-          onChange={(value) => {
-            setLikeFilter(value);
-            setPage(1);
-          }}
-        />
-
-        <Select
-          key="фильтр-жанр"
-          value={genre}
-          size="large"
-          options={[
-            { value: "all", label: "Любой жанр" },
-            { value: "комедия", label: "Комедия" },
-            { value: "мелодрама", label: "Мелодрама" },
-            { value: "драма", label: "Драма" },
-            { value: "ужасы", label: "Ужасы" },
-            { value: "фэнтези", label: "Фэнтези" },
-            { value: "фантастика", label: "Фантастика" },
-            { value: "боевик", label: "Боевик" },
-          ]}
-          style={{ width: 137 }}
-          onChange={(value) => {
-            setGenre(value);
-            setPage(1);
-          }}
-        />
-      </Space>
+      <Filters
+        genre={genre}
+        onGenreChange={setGenre}
+        likeFilter={likeFilter}
+        onLikeFilterChange={setLikeFilter}
+      />
 
       {error ? (
         <p style={{ color: "red" }}>Ошибка: {error}</p>
@@ -109,7 +72,7 @@ export default function ProductsPage() {
       <Pagination
         style={{ textAlign: "center", marginTop: 16 }}
         current={page}
-        total={320}
+        total={total}
         pageSize={16}
         showSizeChanger={false}
         onChange={(newPage) => {

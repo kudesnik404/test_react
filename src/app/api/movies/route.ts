@@ -9,8 +9,6 @@ export async function GET(request: Request) {
     const page = url.searchParams.get("page") ?? "1";
     const genre = url.searchParams.get("genres.name");
 
-    console.log("Incoming GET params:", { page, genre });
-
     const params: Record<string, any> = {
       page,
       limit: "16",
@@ -23,11 +21,7 @@ export async function GET(request: Request) {
       params["genres.name"] = genre;
     }
 
-    console.log("Params for SDK:", params);
-
     const response = await kinopoiskdev.movieController_findManyByQueryV1_4(params);
-    console.log("SDK response:", response);
-
     const moviesData = response.data?.docs || [];
     const movies = moviesData.map((item: any) => ({
       id: item.id,
@@ -41,7 +35,9 @@ export async function GET(request: Request) {
       rating: item.rating,
     }));
 
-    return NextResponse.json(movies);
+    const total = response.data?.total || 0;
+
+    return NextResponse.json({ movies, total });
   } catch (err: any) {
     console.error("Ошибка получения списка фильмов:", err);
     return NextResponse.json(
