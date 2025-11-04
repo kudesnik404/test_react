@@ -1,0 +1,11 @@
+@import "antd/dist/reset.css";
+
+:root {
+  --app-bg: #2E3033;
+  --app-text: #fff;
+}
+
+body {
+  background: var(--app-bg);
+  color: var(--app-text);
+}

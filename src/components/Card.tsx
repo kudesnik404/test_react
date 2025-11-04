@@ -1,34 +1,42 @@
 "use client";
 
-import React from "react";
+import { Card } from "antd";
+import Link from "next/link";
+import LikeCheckbox from "./LikeCheckbox";
+import type { Movie } from "@/store/slices/moviesSlice";
+import { useDispatch } from "react-redux";
+import { toggleLike } from "@/store/slices/moviesSlice";
+import type { AppDispatch } from "@/store";
 import styles from "./Card.module.scss";
-import { Button } from "antd";
+import { FrownOutlined } from "@ant-design/icons";
 
-interface CardProps {
-  title: string;
-  description?: string;
-  poster?: string;
-  year?: string;
-  onClick?: () => void;
+interface MovieCardProps {
+  movie: Movie;
 }
 
-export default function Card({ title, description, poster, year, onClick }: CardProps) {
+export default function MovieCard({ movie }: MovieCardProps) {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleLikeChange = (checked: boolean) => {
+    dispatch(toggleLike(movie.id));
+  };
+
   return (
-    <div className={styles.card} onClick={onClick}>
-      {poster && (
-        <img
-          src={poster}
-          alt={title}
-          style={{ width: "100%", borderRadius: "8px", marginBottom: "8px" }}
-        />
-      )}
-      <div className={styles.title}>
-        {title} {year && `(${year})`}
-      </div>
-      <div className={styles.description}>{description}</div>
-      <Button type="primary" style={{ marginTop: "12px" }}>
-        Action
-      </Button>
-    </div>
+    <Link href={`/products/${movie.id}`} className={styles.card__link}>
+      <Card className={styles.card__container} hoverable loading={false}>
+        {movie.poster ? (
+          <img className={styles.card__cover} src={movie.poster} alt={movie.name} />
+        ) : (
+          <div className={styles.card__cover}>
+            <FrownOutlined style={{ fontSize: "50px" }} />
+          </div>
+        )}
+        <div className={styles.card__info}>
+          <h3>{movie.name}</h3>
+          <p>{movie.year ? `Год: ${movie.year}` : "Год неизвестен"}</p>
+        </div>
+        <LikeCheckbox checked={!!movie.liked} onChange={handleLikeChange} />
+      </Card>
+    </Link>
   );
 }

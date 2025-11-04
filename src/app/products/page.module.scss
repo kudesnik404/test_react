@@ -1,0 +1,10 @@
+.products {
+  max-width: 1440px;
+  margin: auto;
+  padding: 128px 0 64px;
+
+  &__title {
+    text-align: center;
+    margin-bottom: 48px !important;
+  }
+}

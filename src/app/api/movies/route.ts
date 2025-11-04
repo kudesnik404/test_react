@@ -7,21 +7,26 @@ export async function GET() {
   try {
     const response = await kinopoiskdev.movieController_findManyByQueryV1_4({
       page: "1",
-      limit: "25",
+      limit: "24",
       type: "cartoon",
       isSeries: "false",
       ageRating: "18",
     });
 
-    // Фильмы лежат в response.data.docs
     const moviesData = response.data?.docs || [];
+
+    console.log("Все поля фильмов:", moviesData);
 
     const movies = moviesData.map((item: any) => ({
       id: item.id,
-      name: item.name,
+      name: item.name || item.alternativeName || item.enName || "",
       description: item.description,
+      shortDescription: item.shortDescription,
       year: item.year,
       poster: item.poster?.url || "",
+      genres: item.genres || [],
+      countries: item.countries,
+      rating: item.rating,
     }));
 
     return NextResponse.json(movies);
