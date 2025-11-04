@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import kinopoiskdev from "@api/kinopoiskdev";
 
-kinopoiskdev.auth("8HXMSYJ-27JMATK-MWFEVA9-W7DT94T");
+kinopoiskdev.auth("6HS182R-X634REH-GXKRP4A-83V60V8");
 
 export async function GET(request: Request) {
   try {

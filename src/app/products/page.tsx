@@ -58,7 +58,7 @@ export default function ProductsPage() {
           {loading && movies.length === 0
             ? skeletonArray.map((_, idx) => (
                 <Col xs={24} sm={12} md={8} lg={6} key={idx}>
-                  <Skeleton active className={cardStyles.card__container} />
+                  <Skeleton.Node active className={cardStyles.card__container} />
                 </Col>
               ))
             : movies.map((m) => (
