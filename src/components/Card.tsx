@@ -5,11 +5,12 @@ import { Card, Typography, Button } from "antd";
 import Link from "next/link";
 import LikeCheckbox from "./LikeCheckbox";
 import type { Movie } from "@/store/slices/moviesSlice";
+import { removeProduct, toggleFavorite } from "@/store/slices/productsSlice";
 import { addLikedMovie, removeLikedMovie } from "@/store/slices/likedMoviesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch } from "@/store";
 import styles from "./Card.module.scss";
-import { FrownOutlined } from "@ant-design/icons";
+import { FrownOutlined, CloseOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
@@ -21,8 +22,22 @@ export default function MovieCard({ movie }: MovieCardProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   const likedMovies = useSelector((state: RootState) => state.likedMovies.movies);
-  const isLiked = likedMovies.some((m) => m.id === movie.id);
+  // const isLiked = likedMovies.some((m) => m.id === movie.id);
+  const isLiked = movie.favourite ?? false;
+
   const handleLikeChange = (checked: boolean) => {
+    dispatch(toggleFavorite({ id: movie.id, value: checked }));
+  };
+
+  const handleCardDelete = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    dispatch(removeProduct(movie.id));
+  };
+
+  // TODO: Версия для /movies
+  const handleLikeChangeMovie = (checked: boolean) => {
     if (checked) {
       dispatch(addLikedMovie({ id: movie.id, name: movie.name }));
     } else {
@@ -30,7 +45,6 @@ export default function MovieCard({ movie }: MovieCardProps) {
     }
   };
 
-  // синхронизация с localStorage — обновляем каждый раз, когда likedMovies изменяются
   useEffect(() => {
     localStorage.setItem("likedMovies", JSON.stringify(likedMovies));
   }, [likedMovies]);
@@ -56,6 +70,14 @@ export default function MovieCard({ movie }: MovieCardProps) {
           <Text>{movie.year ? `Год: ${movie.year}` : "Год неизвестен"}</Text>
         </div>
         <LikeCheckbox checked={isLiked} onChange={handleLikeChange} />
+        <Button
+          type="primary"
+          shape="circle"
+          icon={<CloseOutlined />}
+          size="large"
+          className={styles.card__close}
+          onClick={handleCardDelete}
+        />
       </Card>
     </Link>
   );

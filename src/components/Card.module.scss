@@ -52,4 +52,11 @@
       color: #666;
     }
   }
+
+  &__close {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    padding: 10px;
+  }
 }

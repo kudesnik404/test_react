@@ -10,20 +10,20 @@ interface LikeCheckboxProps {
 }
 
 export default function LikeCheckbox({ checked, onChange }: LikeCheckboxProps) {
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
-  return (
-    <label className={styles.checkbox} onClick={handleClick}>
-      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} />
-      <span className={styles.icon}>
+    return (
+        <label className={styles.checkbox} onClick={(e) => e.stopPropagation()}>
+            <input
+                type="checkbox"
+                checked={checked}
+                onChange={(e) => onChange(e.target.checked)}
+            />
+            <span className={styles.icon}>
         {checked ? (
-          <HeartFilled style={{ color: "#EB2F45", fontSize: 40 }} />
+            <HeartFilled style={{color: "#EB2F45", fontSize: 40}}/>
         ) : (
-          <HeartTwoTone twoToneColor="#EB2F45" style={{ fontSize: 40 }} />
+            <HeartTwoTone twoToneColor="#EB2F45" style={{fontSize: 40}}/>
         )}
       </span>
-    </label>
-  );
+        </label>
+    );
 }
