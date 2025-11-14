@@ -48,6 +48,21 @@ const productsSlice = createSlice({
     addProduct(state, action: PayloadAction<Movie>) {
       state.products.unshift(action.payload);
     },
+    updateProduct(state, action: PayloadAction<Movie>) {
+      const updated = action.payload;
+
+      const index = state.products.findIndex((p) => p.id === updated.id);
+
+      if (index !== -1) {
+        state.products[index] = {
+          ...state.products[index],
+          ...updated,
+          id: state.products[index].id,
+        };
+
+        localStorage.setItem("products", JSON.stringify(state.products));
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -68,5 +83,6 @@ const productsSlice = createSlice({
   },
 });
 
-export const { setProducts, toggleFavorite, removeProduct, addProduct } = productsSlice.actions;
+export const { setProducts, toggleFavorite, removeProduct, addProduct, updateProduct } =
+  productsSlice.actions;
 export default productsSlice.reducer;

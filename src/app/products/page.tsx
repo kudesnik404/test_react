@@ -6,7 +6,7 @@ import { RootState, AppDispatch } from "@/store";
 import { fetchProducts, setProducts } from "@/store/slices/productsSlice";
 import MovieCard from "@/components/Card";
 import Filters from "@/components/Filters";
-import AddProductModal from "@/components/addProductModal";
+import MovieModal from "@/components/MovieModal";
 import { Row, Col, Skeleton, Typography, Pagination, Flex, Button } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import cardStyles from "@/components/Card.module.scss";
@@ -26,6 +26,7 @@ export default function ProductsPage() {
   const [page, setPage] = useState<number>(1);
   const [genre, setGenre] = useState<string>("all");
   const [likeFilter, setLikeFilter] = useState<string>("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const productsRef = useRef<HTMLDivElement>(null);
   const isFirstRun = useRef(true);
 
@@ -64,6 +65,10 @@ export default function ProductsPage() {
   const filteredProducts = useMemo(() => {
     let result = products.slice();
 
+    if (searchTerm.trim() !== "") {
+      result = result.filter((m) => m.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    }
+
     if (genre && genre !== "all") {
       result = result.filter((m) =>
         Array.isArray(m.genres) ? m.genres.some((g: any) => g.name === genre || g === genre) : false
@@ -77,7 +82,7 @@ export default function ProductsPage() {
     }
 
     return result;
-  }, [products, genre, likeFilter]);
+  }, [products, genre, likeFilter, searchTerm]);
 
   const total = filteredProducts.length || totalFromState;
   const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
@@ -104,13 +109,17 @@ export default function ProductsPage() {
             setLikeFilter(lf);
             setPage(1);
           }}
+          onSearch={(value: string) => {
+            setSearchTerm(value);
+            setPage(1);
+          }}
           ref={productsRef}
         />
         <Button size="large" type="text" onClick={() => setOpen(true)}>
           Добавить фильм <PlusCircleOutlined />
         </Button>
 
-        <AddProductModal open={open} onClose={() => setOpen(false)} />
+        <MovieModal open={open} onClose={() => setOpen(false)} />
       </Flex>
 
       {error ? (

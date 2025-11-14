@@ -4,10 +4,9 @@ import { useEffect } from "react";
 import { Card, Typography, Button } from "antd";
 import Link from "next/link";
 import LikeCheckbox from "./LikeCheckbox";
-import type { Movie } from "@/store/slices/moviesSlice";
+import type { Movie } from "@/store/slices/productsSlice";
 import { removeProduct, toggleFavorite } from "@/store/slices/productsSlice";
-import { addLikedMovie, removeLikedMovie } from "@/store/slices/likedMoviesSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store";
 import styles from "./Card.module.scss";
 import { FrownOutlined, CloseOutlined } from "@ant-design/icons";
@@ -21,8 +20,6 @@ interface MovieCardProps {
 export default function MovieCard({ movie }: MovieCardProps) {
   const dispatch = useDispatch<AppDispatch>();
 
-  const likedMovies = useSelector((state: RootState) => state.likedMovies.movies);
-  // const isLiked = likedMovies.some((m) => m.id === movie.id);
   const isLiked = movie.favourite ?? false;
 
   const handleLikeChange = (checked: boolean) => {
@@ -35,19 +32,6 @@ export default function MovieCard({ movie }: MovieCardProps) {
 
     dispatch(removeProduct(movie.id));
   };
-
-  // TODO: Версия для /movies
-  const handleLikeChangeMovie = (checked: boolean) => {
-    if (checked) {
-      dispatch(addLikedMovie({ id: movie.id, name: movie.name }));
-    } else {
-      dispatch(removeLikedMovie(movie.id));
-    }
-  };
-
-  useEffect(() => {
-    localStorage.setItem("likedMovies", JSON.stringify(likedMovies));
-  }, [likedMovies]);
 
   return (
     <Link href={`/products/${movie.id}`} className={styles.card__link}>

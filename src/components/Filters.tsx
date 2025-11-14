@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState, useEffect } from "react";
 import { Select, Space, Input } from "antd";
 
 interface FiltersProps {
@@ -8,10 +8,19 @@ interface FiltersProps {
   onGenreChange: (value: string) => void;
   likeFilter: string;
   onLikeFilterChange: (value: string) => void;
+  onSearch?: (value: string) => void;
 }
 
 const Filters = forwardRef<HTMLDivElement, FiltersProps>(
-  ({ genre, onGenreChange, likeFilter, onLikeFilterChange }, ref) => {
+  ({ genre, onGenreChange, likeFilter, onLikeFilterChange, onSearch }, ref) => {
+    const [search, setSearch] = useState("");
+
+    useEffect(() => {
+      if (onSearch) {
+        onSearch(search);
+      }
+    }, [search, onSearch]);
+
     return (
       <Space wrap ref={ref}>
         <Select
@@ -25,7 +34,6 @@ const Filters = forwardRef<HTMLDivElement, FiltersProps>(
           style={{ width: 128 }}
           onChange={onLikeFilterChange}
         />
-
         <Select
           key="filter-genre"
           value={genre}
@@ -37,12 +45,19 @@ const Filters = forwardRef<HTMLDivElement, FiltersProps>(
             { value: "драма", label: <span>Драма</span> },
             { value: "ужасы", label: <span>Ужасы</span> },
             { value: "фэнтези", label: <span>Фэнтези</span> },
+            { value: "фантастика", label: <span>Фантастика</span> },
+            { value: "боевик", label: <span>Боевик</span> },
+            { value: "приключения", label: <span>Приключения</span> },
           ]}
-          style={{ width: 140 }}
+          style={{ width: 160 }}
           onChange={onGenreChange}
         />
-
-        <Input placeholder="Поиск по названию" size="large" />
+        <Input
+          placeholder="Поиск по названию"
+          size="large"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />{" "}
       </Space>
     );
   }
