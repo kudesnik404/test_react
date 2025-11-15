@@ -3,7 +3,6 @@
 import { Card, Typography, Button } from "antd";
 import Link from "next/link";
 import LikeCheckbox from "./LikeCheckbox";
-import type { Movie } from "@/store/slices/productsSlice";
 import { removeProduct, toggleFavorite } from "@/store/slices/productsSlice";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store";
@@ -11,6 +10,16 @@ import styles from "./Card.module.scss";
 import { FrownOutlined, CloseOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
+
+interface Movie {
+  id: string;
+  name: string;
+  year?: string;
+  poster?: string;
+  favourite?: boolean;
+  genres?: Array<{ name: string } | string>;
+  description?: string;
+}
 
 interface MovieCardProps {
   movie: Movie;
@@ -28,7 +37,6 @@ export default function MovieCard({ movie }: MovieCardProps) {
   const handleCardDelete = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
     dispatch(removeProduct(movie.id));
   };
 

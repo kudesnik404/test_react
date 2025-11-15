@@ -66,19 +66,23 @@ export default function ProductsPage() {
     let result = products.slice();
 
     if (searchTerm.trim() !== "") {
-      result = result.filter((m) => m.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      result = result.filter((m: {name: string}) => m.name.toLowerCase().includes(searchTerm.toLowerCase()));
     }
 
     if (genre && genre !== "all") {
-      result = result.filter((m) =>
-        Array.isArray(m.genres) ? m.genres.some((g: any) => g.name === genre || g === genre) : false
+      result = result.filter((m: { genres?: Array<{ name: string } | string> }) =>
+          Array.isArray(m.genres)
+              ? m.genres.some((g: { name: string } | string) =>
+                  typeof g === "string" ? g === genre : g.name === genre
+              )
+              : false
       );
     }
 
     if (likeFilter === "liked") {
-      result = result.filter((m) => (m as any).favourite === true);
+      result = result.filter((m: { favourite?: boolean }) => m.favourite === true);
     } else if (likeFilter === "notLiked") {
-      result = result.filter((m) => !(m as any).favourite);
+      result = result.filter((m: { favourite?: boolean }) => !m.favourite);
     }
 
     return result;
@@ -135,10 +139,10 @@ export default function ProductsPage() {
                     <Skeleton.Node active className={cardStyles.card__container} />
                   </Col>
                 ))
-              : pagedProducts.map((p) => (
-                  <Col xs={24} sm={12} md={8} lg={6} key={p.id}>
-                    <MovieCard movie={p} />
-                  </Col>
+              : pagedProducts.map((p: { id: string; name: string; poster?: string; favourite?: boolean; genres?: Array<{ name: string } | string>; year?: string; description?: string }) => (
+                    <Col xs={24} sm={12} md={8} lg={6} key={p.id}>
+                      <MovieCard movie={p} />
+                    </Col>
                 ))}
           </Row>
 
