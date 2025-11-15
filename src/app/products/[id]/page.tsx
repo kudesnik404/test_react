@@ -35,7 +35,7 @@ export default function ProductPage() {
         name: product.name,
         year: product.year,
         description: product.description,
-        genres: product.genres?.map((g) => g.name) || [],
+        genres: product.genres?.map((g: { name: string }) => g.name) || [],
         poster: product.poster,
         favourite: product.liked,
       }

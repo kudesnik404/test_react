@@ -2,12 +2,15 @@
   "name": "test_react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://kudesnik404.github.io/test-react",
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
@@ -28,6 +31,7 @@
     "eslint-config-next": "16.0.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
+    "gh-pages": "^6.3.0",
     "prettier": "^3.6.2",
     "typescript": "^5"
   }
