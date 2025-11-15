@@ -6,12 +6,22 @@ import { useDispatch } from "react-redux";
 import { addProduct, updateProduct } from "@/store/slices/productsSlice";
 import { Modal, Form, Input, Button, Select } from "antd";
 import { genreOptions } from "@/constants/genreOptions";
-import type { Movie } from "@/store/slices/productsSlice";
+import type { Movie } from "@/types";
+
+interface MovieFormValues {
+  id: string;
+  name: string;
+  year?: string;
+  description?: string;
+  genres?: string[];
+  poster?: string;
+  favourite?: boolean;
+}
 
 interface MovieModalProps {
   open: boolean;
   onClose: () => void;
-  initialValues?: Movie;
+  initialValues?: MovieFormValues | null;
 }
 
 export default function MovieModal({ open, onClose, initialValues }: MovieModalProps) {
@@ -28,19 +38,20 @@ export default function MovieModal({ open, onClose, initialValues }: MovieModalP
 
   const handleSubmit = (values: any) => {
     const movieData: Movie = {
-      ...initialValues, // сохраняем id если редактируем
+      ...initialValues,
+      id: initialValues?.id ?? Date.now().toString(),
       name: values.name,
-      year: values.year || "",
+      year: values.year ? Number(values.year) : undefined,
       description: values.description || "",
       genres: (values.genres || []).map((g: string) => ({ name: g })),
       poster: values.poster || "",
-      liked: initialValues?.liked ?? false,
+      favourite: initialValues?.favourite ?? false,
     };
 
     if (initialValues) {
       dispatch(updateProduct(movieData));
     } else {
-      dispatch(addProduct({ ...movieData, id: Date.now() }));
+      dispatch(addProduct(movieData));
     }
 
     form.resetFields();

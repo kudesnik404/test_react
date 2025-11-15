@@ -5,12 +5,12 @@ import styles from "./LikeCheckbox.module.scss";
 import { HeartTwoTone, HeartFilled } from "@ant-design/icons";
 
 interface LikeCheckboxProps {
-  moviePage: boolean;
+  moviePage?: boolean;
   checked: boolean;
   onChange: (checked: boolean) => void;
 }
 
-export default function LikeCheckbox({ checked, onChange, moviePage }: LikeCheckboxProps) {
+export default function LikeCheckbox({ checked, onChange, moviePage = false }: LikeCheckboxProps) {
   return (
     <label
       className={`${styles.checkbox} ${moviePage ? styles.checkbox_moviePage : ""}`}

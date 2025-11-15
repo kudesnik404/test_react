@@ -29,17 +29,30 @@ export default function ProductPage() {
     setProduct({ ...product, favourite: checked });
   };
 
-  const initialValues = product
-    ? {
-        id: product.id,
-        name: product.name,
-        year: product.year,
-        description: product.description,
-        genres: product.genres?.map((g: { name: string }) => g.name) || [],
-        poster: product.poster,
-        favourite: product.liked,
-      }
-    : null;
+    interface MovieFormValues {
+        id: string;
+        name: string;
+        year?: string;
+        description?: string;
+        genres?: string[];
+        poster?: string;
+        favourite?: boolean;
+    }
+
+    const initialValues: MovieFormValues | undefined = product
+        ? {
+            id: product.id,
+            name: product.name,
+            year: product.year?.toString(),
+            description: product.description,
+            genres:
+                product.genres?.map((g: string | { name: string }) =>
+                    typeof g === "string" ? g : g.name
+                ) || [],
+            poster: product.poster,
+            favourite: product.favourite,
+        }
+        : undefined;
 
   useEffect(() => {
     if (products.length === 0) {
@@ -95,13 +108,13 @@ export default function ProductPage() {
             <Paragraph>{product.description || "Описание отсутствует"}</Paragraph>
             <Paragraph>Год: {product.year || "неизвестен"}</Paragraph>
 
-            {product.genres?.length > 0 && (
               <div>
-                {product.genres.map((g: any) => (
-                  <Tag key={g.name}>{g.name}</Tag>
-                ))}
+                  {product.genres?.map((g: string | { name: string }) => (
+                      <Tag key={typeof g === "string" ? g : g.name}>
+                          {typeof g === "string" ? g : g.name}
+                      </Tag>
+                  ))}
               </div>
-            )}
           </Col>
         </Row>
       ) : (

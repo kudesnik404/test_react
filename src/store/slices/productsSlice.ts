@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { Movie } from "../types";
+import type { Movie } from "@/types";
 
 interface ProductsState {
   products: Movie[];
@@ -34,7 +34,7 @@ const productsSlice = createSlice({
       state.products = action.payload;
       state.total = action.payload.length;
     },
-    toggleFavorite(state, action: PayloadAction<{ id: number; value: boolean }>) {
+    toggleFavorite(state, action: PayloadAction<{ id: string; value: boolean }>) {
       const { id, value } = action.payload;
       const index = state.products.findIndex((p) => p.id === id);
       if (index >= 0) {
@@ -42,7 +42,7 @@ const productsSlice = createSlice({
         localStorage.setItem("products", JSON.stringify(state.products));
       }
     },
-    removeProduct(state, action: PayloadAction<number>) {
+    removeProduct(state, action: PayloadAction<string>) {
       state.products = state.products.filter((m) => m.id !== action.payload);
     },
     addProduct(state, action: PayloadAction<Movie>) {
