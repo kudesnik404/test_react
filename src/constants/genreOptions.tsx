@@ -1,0 +1,16 @@
+export const genreOptions = [
+  { value: "all", label: "Любой жанр" },
+  { value: "комедия", label: "Комедия" },
+  { value: "мелодрама", label: "Мелодрама" },
+  { value: "драма", label: "Драма" },
+  { value: "ужасы", label: "Ужасы" },
+  { value: "фэнтези", label: "Фэнтези" },
+  { value: "фантастика", label: "Фантастика" },
+  { value: "боевик", label: "Боевик" },
+  { value: "приключения", label: "Приключения" },
+  { value: "триллер", label: "Триллер" },
+  { value: "криминал", label: "Криминал" },
+  { value: "военный", label: "Военный" },
+  { value: "история", label: "История" },
+  { value: "биография", label: "Биография" },
+];

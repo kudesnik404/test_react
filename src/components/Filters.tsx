@@ -2,6 +2,7 @@
 
 import React, { forwardRef, useState, useEffect } from "react";
 import { Select, Space, Input } from "antd";
+import { genreOptions } from "@/constants/genreOptions";
 
 interface FiltersProps {
   genre: string;
@@ -38,17 +39,7 @@ const Filters = forwardRef<HTMLDivElement, FiltersProps>(
           key="filter-genre"
           value={genre}
           size="large"
-          options={[
-            { value: "all", label: <span>Любой жанр</span> },
-            { value: "комедия", label: <span>Комедия</span> },
-            { value: "мелодрама", label: <span>Мелодрама</span> },
-            { value: "драма", label: <span>Драма</span> },
-            { value: "ужасы", label: <span>Ужасы</span> },
-            { value: "фэнтези", label: <span>Фэнтези</span> },
-            { value: "фантастика", label: <span>Фантастика</span> },
-            { value: "боевик", label: <span>Боевик</span> },
-            { value: "приключения", label: <span>Приключения</span> },
-          ]}
+          options={genreOptions.map((g) => ({ ...g, label: <span key={g.value}>{g.label}</span> }))}
           style={{ width: 160 }}
           onChange={onGenreChange}
         />

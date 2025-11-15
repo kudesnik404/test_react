@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { Card, Typography, Button } from "antd";
 import Link from "next/link";
 import LikeCheckbox from "./LikeCheckbox";

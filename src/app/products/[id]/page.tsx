@@ -5,8 +5,8 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/store";
-import { fetchProducts } from "@/store/slices/productsSlice";
-import { Typography, Tag, Flex, Button, Row, Col } from "antd";
+import { fetchProducts, toggleFavorite } from "@/store/slices/productsSlice";
+import { Typography, Tag, Flex, Button, Row, Col, Skeleton } from "antd";
 import MovieModal from "@/components/MovieModal";
 import LikeCheckbox from "@/components/LikeCheckbox";
 import styles from "./page.module.scss";
@@ -21,6 +21,13 @@ export default function ProductPage() {
 
   const [product, setProduct] = useState<(typeof products)[0] | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const handleLikeChange = (checked: boolean) => {
+    if (!product) return;
+    dispatch(toggleFavorite({ id: product.id, value: checked }));
+    setProduct({ ...product, favourite: checked });
+  };
 
   const initialValues = product
     ? {
@@ -30,7 +37,7 @@ export default function ProductPage() {
         description: product.description,
         genres: product.genres?.map((g) => g.name) || [],
         poster: product.poster,
-        liked: product.liked,
+        favourite: product.liked,
       }
     : null;
 
@@ -43,6 +50,7 @@ export default function ProductPage() {
   useEffect(() => {
     if (products.length > 0) {
       const p = products.find((p) => p.id.toString() === id);
+      setLoading(false);
       setProduct(p ?? null);
     }
   }, [products, id]);
@@ -55,9 +63,18 @@ export default function ProductPage() {
         </Button>
       </Link>
 
-      {product ? (
+      {loading ? (
         <Row gutter={64} wrap={false}>
-          {" "}
+          <Col flex="500px">
+            <Skeleton.Image style={{ width: 350, height: 500, borderRadius: 12 }} active />
+          </Col>
+
+          <Col flex="auto">
+            <Skeleton active paragraph={{ rows: 6 }} />
+          </Col>
+        </Row>
+      ) : product ? (
+        <Row gutter={64} wrap={false}>
           <Col flex="500px" className={styles.movie__poster_сontainer}>
             {product.poster ? (
               <img className={styles.movie__poster} src={product.poster} alt={product.name} />
@@ -66,19 +83,18 @@ export default function ProductPage() {
                 <FrownOutlined style={{ fontSize: "50px" }} />
               </div>
             )}
-            <LikeCheckbox checked={!!product.liked} onChange={() => {}} moviePage />
+            <LikeCheckbox checked={!!product.favourite} onChange={handleLikeChange} moviePage />
           </Col>
+
           <Col flex="auto">
             <Flex justify="space-between">
               <Title level={2}>{product.name}</Title>
-              <Button
-                type="primary"
-                icon={<EditOutlined />}
-                onClick={() => setIsModalOpen(true)}
-              />{" "}
+              <Button type="primary" icon={<EditOutlined />} onClick={() => setIsModalOpen(true)} />
             </Flex>
+
             <Paragraph>{product.description || "Описание отсутствует"}</Paragraph>
             <Paragraph>Год: {product.year || "неизвестен"}</Paragraph>
+
             {product.genres?.length > 0 && (
               <div>
                 {product.genres.map((g: any) => (
@@ -86,7 +102,7 @@ export default function ProductPage() {
                 ))}
               </div>
             )}
-          </Col>{" "}
+          </Col>
         </Row>
       ) : (
         <Paragraph>Фильм не найден</Paragraph>
@@ -95,7 +111,7 @@ export default function ProductPage() {
       <MovieModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        initialValues={product}
+        initialValues={initialValues}
       />
     </main>
   );

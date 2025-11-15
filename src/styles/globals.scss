@@ -19,7 +19,7 @@ body {
 .products {
   max-width: 1440px;
   margin: auto;
-  padding: 128px 48px 64px;
+  padding: 92px 48px 64px;
 
   display: flex;
   flex-direction: column;
@@ -29,4 +29,8 @@ body {
 
 .ant-pagination-item-active a {
   color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.textarea-scroll textarea {
+  overflow-y: auto !important;
 }

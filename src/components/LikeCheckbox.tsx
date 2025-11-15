@@ -1,8 +1,8 @@
 "use client";
 
-import { HeartTwoTone, HeartFilled } from "@ant-design/icons";
 import React from "react";
 import styles from "./LikeCheckbox.module.scss";
+import { HeartTwoTone, HeartFilled } from "@ant-design/icons";
 
 interface LikeCheckboxProps {
   moviePage: boolean;
