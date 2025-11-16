@@ -88,7 +88,7 @@ export default function ProductsPage() {
     return result;
   }, [products, genre, likeFilter, searchTerm]);
 
-  const total = filteredProducts.length || totalFromState;
+  const total = filteredProducts.length;
   const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
 
@@ -115,7 +115,6 @@ export default function ProductsPage() {
           }}
           onSearch={(value: string) => {
             setSearchTerm(value);
-            setPage(1);
           }}
           ref={productsRef}
         />
